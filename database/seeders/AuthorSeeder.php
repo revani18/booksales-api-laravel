@@ -21,17 +21,17 @@ class AuthorSeeder extends Seeder
             [
                 'name' => 'Tere Liye',
                 'photo' => 'tere_liye.jpg',
-                'bio' => 'Penulis novel populer Indonesia.'
+                'bio' => 'Penulis novel Indonesia.'
             ],
             [
                 'name' => 'Dee Lestari',
                 'photo' => 'dee_lestari.jpg',
-                'bio' => 'Penulis dan penyanyi Indonesia.'
+                'bio' => 'Penulis novel dan penyanyi Indonesia.'
             ],
             [
                 'name' => 'Pramoedya Ananta Toer',
                 'photo' => 'pramoedya.jpg',
-                'bio' => 'Penulis karya sastra dan sejarah Indonesia.'
+                'bio' => 'Penulis sastra Indonesia.'
             ],
             [
                 'name' => 'Ayu Utami',
@@ -41,7 +41,10 @@ class AuthorSeeder extends Seeder
         ];
 
         foreach ($authors as $author) {
-            Author::create($author);
+            Author::firstOrCreate(
+                ['name' => $author['name']],
+                $author
+            );
         }
     }
 }
