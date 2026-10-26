@@ -31,16 +31,22 @@
                         <th>Deskripsi</th>
                         <th>Harga</th>
                         <th>Stok</th>
+                        <th>Cover</th>
+                        <th>Genre</th>
+                        <th>Author</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($books as $item)
+                    @foreach ($books as $book)
                         <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{ $item['title'] }}</td>
-                            <td>{{ $item['description'] }}</td>
-                            <td>Rp{{ number_format($item['price'], 0, ',', '.') }}</td>
-                            <td>{{ $item['stock'] }}</td>
+                            <td>{{ $book->id }}</td>
+                            <td>{{ $book->title }}</td>
+                            <td>{{ $book->description }}</td>
+                            <td>Rp{{ number_format($book->price, 0, ',', '.') }}</td>
+                            <td>{{ $book->stock }}</td>
+                            <td>{{ $book->cover_photo }}</td>
+                            <td>{{ $book->genre->name ?? '-' }}</td>
+                            <td>{{ $book->author->name ?? '-' }}</td>
                         </tr>
                     @endforeach
                 </tbody>

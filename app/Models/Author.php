@@ -2,41 +2,18 @@
 
 namespace App\Models;
 
-class Author
+use Illuminate\Database\Eloquent\Model;
+
+class Author extends Model
 {
-    public static function getAll()
+    protected $fillable = [
+        'name',
+        'photo',
+        'bio',
+    ];
+
+    public function books()
     {
-        return [
-            [
-                'id' => 1,
-                'name' => 'Andrea Hirata',
-                'photo' => 'andrea-hirata.jpg',
-                'bio' => 'Penulis novel Laskar Pelangi'
-            ],
-            [
-                'id' => 2,
-                'name' => 'Tere Liye',
-                'photo' => 'tere-liye.jpg',
-                'bio' => 'Penulis novel dan cerita fiksi'
-            ],
-            [
-                'id' => 3,
-                'name' => 'Dee Lestari',
-                'photo' => 'dee-lestari.jpg',
-                'bio' => 'Penulis novel dan karya sastra'
-            ],
-            [
-                'id' => 4,
-                'name' => 'Raditya Dika',
-                'photo' => 'raditya-dika.jpg',
-                'bio' => 'Penulis buku dan komedian'
-            ],
-            [
-                'id' => 5,
-                'name' => 'Ahmad Fuadi',
-                'photo' => 'ahmad-fuadi.jpg',
-                'bio' => 'Penulis novel Negeri 5 Menara'
-            ],
-        ];
+        return $this->hasMany(Book::class);
     }
 }
