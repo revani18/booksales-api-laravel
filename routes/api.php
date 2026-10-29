@@ -13,8 +13,7 @@ Route::get('/user', function (Request $request) {
 
 
 // Books
-Route::get('/books', [BookController::class, 'index']);
-Route::post('/books', [BookController::class, 'store']);
+Route::apiResource('/books', BookController::class);
 
 // Genres
 Route::get('/genres', [GenreController::class, 'index']);
