@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\GenreController;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -31,17 +32,25 @@ Route::apiResource('/genres', GenreController::class)
     ->only(['index', 'show']);
 
 
-// Perubahan data hanya untuk admin
+// Perubahan data 
+// Customer: membuat, melihat detail, dan mengubah transaksi
+Route::middleware(['auth:api', 'role:customer'])->group(function () {
+    Route::apiResource('/transactions', TransactionController::class)
+        ->only(['store', 'show', 'update']);
+});
+
+// Admin: melihat semua transaksi dan menghapus transaksi
 Route::middleware(['auth:api', 'role:admin'])->group(function () {
+    Route::apiResource('/transactions', TransactionController::class)
+        ->only(['index', 'destroy']);
+
+    // CRUD buku, author, dan genre khusus admin
+    Route::apiResource('/books', BookController::class)
+        ->only(['store', 'update', 'destroy']);
+
     Route::apiResource('/authors', AuthorController::class)
         ->only(['store', 'update', 'destroy']);
 
     Route::apiResource('/genres', GenreController::class)
         ->only(['store', 'update', 'destroy']);
-
-    // Books: admin only
-    Route::middleware(['auth:api', 'role:admin'])->group(function () {
-        Route::apiResource('/books', BookController::class)
-            ->only(['store', 'update', 'destroy']);
-    });
 });
