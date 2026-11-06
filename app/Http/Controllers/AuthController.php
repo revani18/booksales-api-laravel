@@ -11,43 +11,47 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
-    public function register(Request $request) {
-        // setup validator
+    public function register(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|string|min:8'
+            'username' => 'required|string|max:255|unique:users,username',
+            'email' => 'required|email|max:255|unique:users,email',
+            'password' => 'required|string|min:8',
         ]);
 
-        // cek validator
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation Error',
+                'errors' => $validator->errors(),
+            ], 422);
         }
 
-        // create user
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password)
-        ]);
+        try {
+            $user = User::create([
+                'name' => $request->name,
+                'username' => $request->username,
+                'email' => $request->email,
+                'password' => bcrypt($request->password),
+                'role' => 'customer',
+            ]);
 
-        // cek keberhasilan
-        if ($user){
             return response()->json([
                 'success' => true,
                 'message' => 'User created successfully',
-                'data' => $user
+                'data' => $user,
             ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to create user',
+            ], 409);
         }
-
-        // cek gagal
-        return response()->json([
-            'success' => false,
-            'message' => 'User creation failed'         
-        ], 409);         //conflict
     }
 
-    public function login(Request $request) {
+    public function login(Request $request)
+    {
         // setup validator
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
@@ -66,7 +70,7 @@ class AuthController extends Controller
         if (!$token = auth()->guard('api')->attempt($credentials)) {
             return response()->json([
                 'success' => false,
-                'message' => 'Email atau Password Anda Salah!'         
+                'message' => 'Email atau Password Anda Salah!'
             ], 401);
         }
 
@@ -79,8 +83,9 @@ class AuthController extends Controller
         ], 200);
     }
 
-    public function logout(Request $request) {
-        // try 
+    public function logout(Request $request)
+    {
+        // try
         // invalidate token
         // cek isSuccess
 
@@ -92,7 +97,7 @@ class AuthController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Logout Successfully' 
+                'message' => 'Logout Successfully'
             ], 200);
         } catch (JWTException $e) {
             return response()->json([
