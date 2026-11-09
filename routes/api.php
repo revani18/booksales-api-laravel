@@ -36,13 +36,13 @@ Route::apiResource('/genres', GenreController::class)
 // Customer: membuat, melihat detail, dan mengubah transaksi
 Route::middleware(['auth:api', 'role:customer'])->group(function () {
     Route::apiResource('/transactions', TransactionController::class)
-        ->only(['store', 'show', 'update']);
+        ->only(['store', 'show']);
 });
 
 // Admin: melihat semua transaksi dan menghapus transaksi
 Route::middleware(['auth:api', 'role:admin'])->group(function () {
     Route::apiResource('/transactions', TransactionController::class)
-        ->only(['index', 'destroy']);
+        ->only(['index', 'destroy', 'update']);
 
     // CRUD buku, author, dan genre khusus admin
     Route::apiResource('/books', BookController::class)
